@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2020 | Hexo</title>
+  <title>信息收集 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2020/index.html">
+  <meta name="description" content="域名收集在SRC网站公告中查看测试范围，包括应用、域名等。 有的SRC公告的测试域名不全，测试应用时抓包，在Burp Suite流量中进一步收集域名。 子域名收集使用各种工具收集子域。 工具： OneForAll（非常好用）：https:&#x2F;&#x2F;github.com&#x2F;shmilylty&#x2F;OneForAll subDomainsBrute 端口探测扫描所有子域端口开放情况。 nmap -p- –min-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="信息收集">
+<meta property="og:url" content="http://yoursite.com/2020/12/31/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="域名收集在SRC网站公告中查看测试范围，包括应用、域名等。 有的SRC公告的测试域名不全，测试应用时抓包，在Burp Suite流量中进一步收集域名。 子域名收集使用各种工具收集子域。 工具： OneForAll（非常好用）：https:&#x2F;&#x2F;github.com&#x2F;shmilylty&#x2F;OneForAll subDomainsBrute 端口探测扫描所有子域端口开放情况。 nmap -p- –min-">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-12-31T06:41:43.715Z">
+<meta property="article:modified_time" content="2020-12-15T01:34:37.515Z">
 <meta property="article:author" content="sqlmaping">
 <meta name="twitter:card" content="summary">
   
@@ -150,103 +154,191 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-信息收集" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      信息收集
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/12/31/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="archive-article-date">
+
+        
+        <a href="/2020/12/31/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="archive-article-date">
   	<time datetime="2020-12-31T06:41:43.715Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-31</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/12/31/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">信息收集</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="域名收集"><a href="#域名收集" class="headerlink" title="域名收集"></a>域名收集</h4><p>在SRC网站公告中查看测试范围，包括应用、域名等。</p>
+<p>有的SRC公告的测试域名不全，测试应用时抓包，在Burp Suite流量中进一步收集域名。</p>
+<h4 id="子域名收集"><a href="#子域名收集" class="headerlink" title="子域名收集"></a>子域名收集</h4><p>使用各种工具收集子域。</p>
+<p>工具：</p>
+<p>OneForAll（非常好用）：<a href="https://github.com/shmilylty/OneForAll" target="_blank" rel="noopener">https://github.com/shmilylty/OneForAll</a></p>
+<p>subDomainsBrute</p>
+<h4 id="端口探测"><a href="#端口探测" class="headerlink" title="端口探测"></a>端口探测</h4><p>扫描所有子域端口开放情况。</p>
+<p>nmap -p- –min-rate=1000 -sS -T4 10.10.10.10 -Pn</p>
+<h4 id="目录暴破"><a href="#目录暴破" class="headerlink" title="目录暴破"></a>目录暴破</h4><p>对所有端口进行目录暴破，查看是否存在敏感路径。对于开放Web服务的子域，需进一步测试Web服务的业务逻辑漏洞。</p>
+<p>工具（字典收集是核心）：</p>
+<p>dirsearch</p>
+<p>御剑</p>
+<h4 id="Google-Hacking"><a href="#Google-Hacking" class="headerlink" title="Google Hacking"></a>Google Hacking</h4><p>工具地址<a href="https://www.exploit-db.com/google-hacking-database/" target="_blank" rel="noopener">https://www.exploit-db.com/google-hacking-database/</a><br>1、intext：网站特定文字。<br>site:lechange.com intext:管理<br>site:lechange.com intext:测试<br>site:lechange.com intext:电话<br>site:lechange.com intext:ftp://<em>:</em></p>
+<p>2、intitle：网站标题。<br>site:lechange.com intitle:config<br>site:lechange.com intitle:confixx<br>site:lechange.com intitle:login<br>site:lechange.com intitle:password</p>
+<p>3、allinurl：查到相关网站———-不常用<br>allinurl:lechange.com</p>
+<p>4、inurl：<br>site:lechange.com inurl:login<br>site:lechange.com inurl:file   ———–上传漏洞<br>site:lechange.com inurl:load ————–上传漏洞<br>site:lechange.com inurl:asp?id=   ———-注入漏洞</p>
+<p>5、filetype：文件类型————–可查看是否存在列目录<br>site:lechange.com filetype:pdf<br>site:lechange.com filetype:doc<br>site:lechange.com filetype:mdb</p>
+<h4 id="bucket收集"><a href="#bucket收集" class="headerlink" title="bucket收集"></a>bucket收集</h4><p>有的公司业务需要使用云存储，可以收集是否存在未授权访问的bucket，进一步查看其中是否存在敏感文件。</p>
+<p>参考：</p>
+<p><a href="https://hackerone.com/reports/106305" target="_blank" rel="noopener">https://hackerone.com/reports/106305</a></p>
+<p><a href="https://hackerone.com/reports/128088" target="_blank" rel="noopener">https://hackerone.com/reports/128088</a></p>
+<p>工具：bucket_finder</p>
+<h4 id="js信息收集"><a href="#js信息收集" class="headerlink" title="js信息收集"></a>js信息收集</h4><p>js中可以收集的信息有：敏感信息（密码、API密钥、bucket）、业务逻辑、加密签名算法（用于写mitmproxy、burp插件）、Ajax请求、代码中的潜在危险函数操作（eval，dangerallySetInnerHTML等）。</p>
+<p>参考文章：<a href="https://www.freebuf.com/column/214179.html" target="_blank" rel="noopener">https://www.freebuf.com/column/214179.html</a></p>
+<p><a href="https://blog.csdn.net/he_and/article/details/108527323" target="_blank" rel="noopener">https://blog.csdn.net/he_and/article/details/108527323</a></p>
+<p>工具：</p>
+<p>JS Scan （burp插件，识别js文件）</p>
+<p>Pack Fuzzer（识别所有API，并进行测试）</p>
+<p>JS Finder（爬取URL和子域名）</p>
+<p>DumpsterDiver（识别一串字符串是否为密钥）</p>
+<p> 反混淆工具：</p>
+<p>js-beautify（<a href="https://github.com/beautify-web/js-beautify），也有在线版本：https://beautifier.io/" target="_blank" rel="noopener">https://github.com/beautify-web/js-beautify），也有在线版本：https://beautifier.io/</a></p>
+<p>JStillery（<a href="https://github.com/mindedsecurity/JStillery）" target="_blank" rel="noopener">https://github.com/mindedsecurity/JStillery）</a></p>
+<p>提取API接口工具：</p>
+<p>relative-url-extractor（可以直接从压缩js中提取api，因此不需要反混淆）</p>
+<p>LinkFinder</p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/12/31/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2020-12-31T03:34:11.055Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-31</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">禅道开源版11.6 漏洞复现</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">禅道开源版11.6 漏洞复现</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/12/31/hello-world/" class="archive-article-date">
-  	<time datetime="2020-12-31T01:36:22.287Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-31</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/12/31/hello-world/">Hello World</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
 
 
           </div>
@@ -269,8 +361,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
