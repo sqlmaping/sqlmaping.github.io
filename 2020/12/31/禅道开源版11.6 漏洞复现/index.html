@@ -15,6 +15,8 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="环境准备禅道开源版11.61版本有RCE、SQL注入、任意文件读取等严重漏洞，11.61早期版本也有同样问题。现以开源版11.6进行漏洞复现。本次复现没有选择禅道一键安装，选择下载源码，用linux xampp开启Web服务。环境：xampp linux版本 （在kali中安装xampp）禅道11.6版本源码（https:&#x2F;&#x2F;www.zentao.net&#x2F;download&#x2F;80153.html）">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/2020/12/source/images/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_151206-1609386422942.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_151206.png">
 <meta property="og:image" content="http://yoursite.com/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_151206.png">
 <meta property="og:image" content="http://yoursite.com/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_153310.png">
 <meta property="og:image" content="http://yoursite.com/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_153946.png">
@@ -33,11 +35,11 @@
 <meta property="og:image" content="c:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402092751824.png">
 <meta property="og:image" content="c:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402144341596.png">
 <meta property="og:image" content="c:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402150859666.png">
-<meta property="article:published_time" content="2020-12-31T03:14:09.672Z">
-<meta property="article:modified_time" content="2020-12-31T03:13:50.494Z">
+<meta property="article:published_time" content="2020-12-31T03:34:11.055Z">
+<meta property="article:modified_time" content="2020-12-31T05:31:45.008Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_151206.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/12/source/images/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_151206-1609386422942.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -186,7 +188,7 @@
 
         
         <a href="/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2020-12-31T03:14:09.672Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-31</time>
+  	<time datetime="2020-12-31T03:34:11.055Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-31</time>
 </a>
         
       </header>
@@ -194,8 +196,13 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><p>禅道开源版11.61版本有RCE、SQL注入、任意文件读取等严重漏洞，11.61早期版本也有同样问题。现以开源版11.6进行漏洞复现。本次复现没有选择禅道一键安装，选择下载源码，用linux xampp开启Web服务。<br>环境：<br>xampp linux版本 （在kali中安装xampp）<br>禅道11.6版本源码（<a href="https://www.zentao.net/download/80153.html）" target="_blank" rel="noopener">https://www.zentao.net/download/80153.html）</a></p>
-<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><h4 id="分析路由"><a href="#分析路由" class="headerlink" title="分析路由"></a>分析路由</h4><p>先看一下禅道的路由，打开/config/config.php文件中，路由模式默认为PATH_INFO，PATH_INFO之间中的分割符为-。<br><img src="2020-04-01_151206.png" alt=""></p>
-<h4 id="分析入口文件"><a href="#分析入口文件" class="headerlink" title="分析入口文件"></a>分析入口文件</h4><p>从入口文件www/index.php看禅道是如何传参的，定位到66-68行，调用了三个函数parseRequest()、checkPriv()、loadModule()。<br><img src="2020-04-01_153310.png" alt=""><br>先查看parseRequest()，全局搜索，定位到framework/base/router.class.php，其中setRouteByPathInfo()定义了PATH_INFO路由的使用方法。<br><img src="2020-04-01_153946.png" alt=""><br>再跟进module/common/model.php checkPriv方法，功能是验证用户对将要调用的模块是否有权限。<br><img src="2020-04-01_154811.png" alt=""><br>最后跟进framework/base/router.class.php中loadModule方法，通过之前获取的moduleName包含对应的control类文件并实例化，随后调用setParamsByPathInfo方法从路径中获取方法对应的参数值，最后通过call_user_func_array方法调用对应control类中的对应方法并赋值。</p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><h4 id="分析路由"><a href="#分析路由" class="headerlink" title="分析路由"></a>分析路由</h4><p>先看一下禅道的路由，打开/config/config.php文件中，路由模式默认为PATH_INFO，PATH_INFO之间中的分割符为-。  </p>
+<p>![2020-04-01_151206](/images/禅道开源版11.6 漏洞复现/2020-04-01_151206.png) </p>
+<p>![2020-04-01_151206](../../source/images/禅道开源版11.6 漏洞复现/2020-04-01_151206-1609386496709.png) </p>
+<p><img src="../../source/images/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_151206-1609386422942.png" alt="2020-04-01_151206"> </p>
+<p><img src="2020-04-01_151206.png" alt=""> </p>
+<h4 id="分析入口文件"><a href="#分析入口文件" class="headerlink" title="分析入口文件"></a>分析入口文件<img src="2020-04-01_151206.png" alt="2020-04-01_151206"></h4><p>从入口文件www/index.php看禅道是如何传参的，定位到66-68行，调用了三个函数parseRequest()、checkPriv()、loadModule()。<br><img src="2020-04-01_153310.png" alt=""></p>
+<p>先查看parseRequest()，全局搜索，定位到framework/base/router.class.php，其中setRouteByPathInfo()定义了PATH_INFO路由的使用方法。<br><img src="2020-04-01_153946.png" alt=""><br>再跟进module/common/model.php checkPriv方法，功能是验证用户对将要调用的模块是否有权限。<br><img src="2020-04-01_154811.png" alt=""><br>最后跟进framework/base/router.class.php中loadModule方法，通过之前获取的moduleName包含对应的control类文件并实例化，随后调用setParamsByPathInfo方法从路径中获取方法对应的参数值，最后通过call_user_func_array方法调用对应control类中的对应方法并赋值。</p>
 <p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200401161341778.png" alt="image-20200401161341778"></p>
 <p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200401161627916.png" alt="image-20200401161627916"> </p>
 <h4 id="漏洞定位"><a href="#漏洞定位" class="headerlink" title="漏洞定位"></a>漏洞定位</h4><p>接下来回归漏洞位置，漏洞存在于module/api/control.php的getModel方法，loadModel方法能调用指定指定模块的model文件并返回model对象。配合call_user_func_array函数便可以调用所有的model文件的所有方法。</p>
