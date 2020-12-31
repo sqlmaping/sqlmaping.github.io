@@ -152,6 +152,103 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-禅道开源版11.6 漏洞复现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">禅道开源版11.6 漏洞复现</a>
+    </h1>
+  
+
+        
+        <a href="/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="archive-article-date">
+  	<time datetime="2020-12-31T03:14:09.672Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-31</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><p>禅道开源版11.61版本有RCE、SQL注入、任意文件读取等严重漏洞，11.61早期版本也有同样问题。现以开源版11.6进行漏洞复现。本次复现没有选择禅道一键安装，选择下载源码，用linux xampp开启Web服务。<br>环境：<br>xampp linux版本 （在kali中安装xampp）<br>禅道11.6版本源码（<a href="https://www.zentao.net/download/80153.html）" target="_blank" rel="noopener">https://www.zentao.net/download/80153.html）</a></p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><h4 id="分析路由"><a href="#分析路由" class="headerlink" title="分析路由"></a>分析路由</h4><p>先看一下禅道的路由，打开/config/config.php文件中，路由模式默认为PATH_INFO，PATH_INFO之间中的分割符为-。<br><img src="2020-04-01_151206.png" alt=""></p>
+<h4 id="分析入口文件"><a href="#分析入口文件" class="headerlink" title="分析入口文件"></a>分析入口文件</h4><p>从入口文件www/index.php看禅道是如何传参的，定位到66-68行，调用了三个函数parseRequest()、checkPriv()、loadModule()。<br><img src="2020-04-01_153310.png" alt=""><br>先查看parseRequest()，全局搜索，定位到framework/base/router.class.php，其中setRouteByPathInfo()定义了PATH_INFO路由的使用方法。<br><img src="2020-04-01_153946.png" alt=""><br>再跟进module/common/model.php checkPriv方法，功能是验证用户对将要调用的模块是否有权限。<br><img src="2020-04-01_154811.png" alt=""><br>最后跟进framework/base/router.class.php中loadModule方法，通过之前获取的moduleName包含对应的control类文件并实例化，随后调用setParamsByPathInfo方法从路径中获取方法对应的参数值，最后通过call_user_func_array方法调用对应control类中的对应方法并赋值。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200401161341778.png" alt="image-20200401161341778"></p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200401161627916.png" alt="image-20200401161627916"> </p>
+<h4 id="漏洞定位"><a href="#漏洞定位" class="headerlink" title="漏洞定位"></a>漏洞定位</h4><p>接下来回归漏洞位置，漏洞存在于module/api/control.php的getModel方法，loadModel方法能调用指定指定模块的model文件并返回model对象。配合call_user_func_array函数便可以调用所有的model文件的所有方法。</p>
+<p>这里由于禅道路由的特性，会将所有符合pathinfo格式的参数给赋值到对应变量中，因此这里的moduleName，methodName，params参数都是用户可控的。</p>
+<p>跟进这里的函数，其中param参数经过了explode函数，又经过了strpos和parse_str函数，简单来说这里其实就是参数赋值的作用，假如params对应位置的参数为users=admin，那么经过这里的处理后，params中就会传递users变量。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200401162327787.png" alt="image-20200401162327787"> </p>
+<p>本漏洞需要利用的模块和方法分别为api、getModel，可以zt_grouppriv表中查询调用该接口所需要的权限组为1-10，这意味着普通用户即可以调用该接口，研发、测试、项目经理等都有权限。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200401163525279.png" alt="image-20200401163525279"> </p>
+<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><p>分析出漏洞所在模块和方法分别为api、getModel后，就可以对漏洞进行利用，可以利用的有SQL注入，任意文件读取，RCE。</p>
+<h5 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h5><p>禅道11.6版本对所有的SQL语句都做了转义处理，并且get参数有严格的限制，不能出现”()”等特殊符号，利用难度较高。在module/api/model.php文件的sql函数中发现了SQL注入点。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200401172534611.png" alt="image-20200401172534611"></p>
+<p>这里简单说下禅道11.6所采用的pathinfo模式，首先通过传参确定进入的control文件为api，对应的method为getModel，接着开始对参数进行赋值，其中moduleName为api，methodName=sql，最后的param为sql=select+account,password+from+zt_user，那么调用了call_user_func_array函数后，会进入到api目录下的model文件，对应调用其中的sql函数，并通过赋值，将sql变量赋值为select+account,password+from+zt_user，最后执行query语句，造成数据库泄露。如下图，1为moduleName，2为methodName，3为param。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200401181153716.png" alt="image-20200401181153716"></p>
+<h5 id="任意文件读取"><a href="#任意文件读取" class="headerlink" title="任意文件读取"></a>任意文件读取</h5><p>任意文件读取漏洞在/module/file/model.php的parseCSV函数，对fileName进行赋值，例如/etc/passwd，可以读取文件。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402082920404.png" alt="image-20200402082920404"></p>
+<p>漏洞PoC为<a href="http://192.168.175.128/zentaopms/www/api-getModel-file-parseCSV-fileName=/etc/passwd" target="_blank" rel="noopener">http://192.168.175.128/zentaopms/www/api-getModel-file-parseCSV-fileName=/etc/passwd</a></p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402083544416.png" alt="image-20200402083544416"></p>
+<h5 id="RCE漏洞"><a href="#RCE漏洞" class="headerlink" title="RCE漏洞"></a>RCE漏洞</h5><p>这里的RCE是文件上传加文件包含来getshell的，需要两步。</p>
+<p>文件上传在module/editor/model.php中的save函数</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402085915038.png" alt="image-20200402085915038"></p>
+<p>evils为文件内容设有黑名单限制，可以绕过。另外对filePath有可写限制，因此，对于linux目录，可写入到tmp路径下。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402090729149.png" alt="image-20200402090729149"> </p>
+<p>文件上传poc，这里需注意POST请求的content-type类型，需要选择application/x-www-form-urlencoded，选择其他格式，会导致上传的不是php脚本。建议使用hackbar，如果使用burp suite也行，需要设置好content-type。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402091910859.png" alt="image-20200402091910859"> </p>
+<p>发送请求后，在/tmp路径下看到1234.php文件，接下来需要进行文件包含。</p>
+<p>文件包含点在module/api/model.php的getMethod函数，传入filePath，经过helper::import函数。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402092751824.png" alt="image-20200402092751824"> </p>
+<p>跟进import函数（/framework/base/help.class.php中），可以看到import函数是用来包含文件的，结合model.php，得知包含的是filePath的dirname，这里注意dirname函数是返回路径中的目录部分，因此我们在构造filePath时，需要在/tmp/1234后面加一层子路径，例如/tmp/1234/1。</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402144341596.png" alt="image-20200402144341596"> </p>
+<p>最终PoC为：<a href="http://192.168.175.128/zentaopms/www/api-getModel-api-getMethod-filePath=/tmp/1234/1" target="_blank" rel="noopener">http://192.168.175.128/zentaopms/www/api-getModel-api-getMethod-filePath=/tmp/1234/1</a></p>
+<p>造成RCE漏洞：</p>
+<p><img src="C:%5CUsers%5Ccjx%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200402150859666.png" alt="image-20200402150859666"> </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -159,7 +256,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/12/31/hello-world/">Hello World 1</a>
+      <a class="article-title" href="/2020/12/31/hello-world/">Hello World</a>
     </h1>
   
 
