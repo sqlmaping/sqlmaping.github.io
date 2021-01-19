@@ -172,23 +172,23 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="初步分析"><a href="#初步分析" class="headerlink" title="初步分析"></a>初步分析</h3><p>首先APK解压缩，发现没有dex文件，那么程序逻辑应该放在so文件中。</p>
-<p><img src="../images/easy-dex/image-20210114142201736.png" alt="image-20210114142201736"> </p>
+        <h2 id="XCTF-easy-dex题解"><a href="#XCTF-easy-dex题解" class="headerlink" title="XCTF easy-dex题解"></a>XCTF easy-dex题解</h2><h3 id="初步分析"><a href="#初步分析" class="headerlink" title="初步分析"></a>初步分析</h3><p>首先APK解压缩，发现没有dex文件，那么程序逻辑应该放在so文件中。</p>
+<p><img src="/images/easy-dex/image-20210114142201736.png" alt="image-20210114142201736">  </p>
 <p>从manifest配置文件进一步确认核心逻辑在so中。</p>
-<p><img src="../images/easy-dex/image-20210114142810345.png" alt="image-20210114142810345"></p>
+<p><img src="/images/easy-dex/image-20210114142810345.png" alt="image-20210114142810345"></p>
 <p>NativeActivity在哪个so中，就要看meta-data中指定的lib名，显然这里是在叫做native的so中。</p>
 <p>将libnative.so文件拖入IDA中进行反编译。找到入口函数android_main。</p>
 <p>基础知识：NativeActivity的入口方法为android_main。参考文章1：<a href="https://blog.csdn.net/qq_19683651/article/details/82623717" target="_blank" rel="noopener">https://blog.csdn.net/qq_19683651/article/details/82623717</a></p>
 <p>从上往下看android_main函数。</p>
-<p><img src="../images/easy-dex/image-20210114150717373.png" alt="image-20210114150717373"> </p>
+<p><img src="/images/easy-dex/image-20210114150717373.png" alt="image-20210114150717373"> </p>
 <p>双击v2，查看off_43A18存的是0x3CA10</p>
-<p><img src="../images/easy-dex/image-20210114151005795.png" alt="image-20210114151005795"> </p>
+<p><img src="/images/easy-dex/image-20210114151005795.png" alt="image-20210114151005795"> </p>
 <p>接下来memcpy函数，是将0x7004开始的0x3CA10个字节拷贝到v3中。</p>
 <p>继续往下看，v14应该就是手机摇动的次数了，符合条件判断语句时，将v3解压到dest，然后写入到文件中。所以猜测v3就是dex文件了。</p>
-<p><img src="../images/easy-dex/image-20210114152532640.png" alt="image-20210114152532640"> </p>
+<p><img src="/images/easy-dex/image-20210114152532640.png" alt="image-20210114152532640"> </p>
 <h3 id="dump内存"><a href="#dump内存" class="headerlink" title="dump内存"></a>dump内存</h3><p>使用IDA动态调试的方法将dex文件dump下来。</p>
 <p>用IDA动态调试so，一开始用夜神模拟器装apk，结果IDA无法连接。</p>
-<p> <img src="../images/easy-dex/image-20210114183917563.png" alt="image-20210114183917563"> </p>
+<p> <img src="/images/easy-dex/image-20210114183917563.png" alt="image-20210114183917563"> </p>
 <p>回头看lib目录下，只有armeabi-v7a，也就是说只支持真机。</p>
 <p>于是使用真机，进入真机shell，查看进程：</p>
 <p>pm list packages -3</p>
@@ -200,35 +200,35 @@
 
 <p>代码中结束地址0x43a74怎么得到的呢？</p>
 <p>将起始地址为0x7004，0x3CA10个字节拷贝出来，那么两者相加得到结束地址为0x43a74。</p>
-<p><img src="../images/easy-dex/image-20210118094434703.png" alt="image-20210118094434703"></p>
+<p><img src="/images/easy-dex/image-20210118094434703.png" alt="image-20210118094434703"></p>
 <p>dump出dex文件，发现格式不对，开头没有dex字符，应该是加密的。</p>
-<p><img src="../images/easy-dex/image-20210115112653824.png" alt="image-20210115112653824"></p>
+<p><img src="/images/easy-dex/image-20210115112653824.png" alt="image-20210115112653824"></p>
 <p>对比正常的dex文件，开头是有dex字符的。</p>
-<p><img src="../images/easy-dex/image-20210115112742586.png" alt="image-20210115112742586"></p>
+<p><img src="/images/easy-dex/image-20210115112742586.png" alt="image-20210115112742586"></p>
 <h3 id="dex文件解密"><a href="#dex文件解密" class="headerlink" title="dex文件解密"></a>dex文件解密</h3><p>接下来需要找到加密逻辑，应该查看写dex文件之前的代码。</p>
 <p>这里操作了off_43A18和v3，应该就是解密逻辑。</p>
-<p><img src="../images/easy-dex/image-20210118095351312.png" alt="image-20210118095351312"> </p>
+<p><img src="/images/easy-dex/image-20210118095351312.png" alt="image-20210118095351312"> </p>
 <p>将伪代码进行解读并注释。</p>
-<p><img src="../images/easy-dex/image-20210118111520138.png" alt="image-20210118111520138"> </p>
+<p><img src="/images/easy-dex/image-20210118111520138.png" alt="image-20210118111520138"> </p>
 <p>将伪代码转化为python，写出解密和解压缩的逻辑。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line">import zlib</span><br><span class="line"></span><br><span class="line">with open(&#39;E:\\07 XCTF\\mobile\\easy-dex\\6ee9ecdb39b5492aba053a73aeebb25b - 副本\\dump.dex&#39;,&#39;rb&#39;) as f:</span><br><span class="line">    data &#x3D; list(f.read())</span><br><span class="line">    size &#x3D; 0x3ca10</span><br><span class="line">    times &#x3D; 0</span><br><span class="line">    while True:</span><br><span class="line">        if times &lt;&#x3D; 0x59:</span><br><span class="line">            t &#x3D; int(times&#x2F;10)</span><br><span class="line">            if times % 10 &#x3D;&#x3D;9:</span><br><span class="line">                s &#x3D; int(size&#x2F;10)</span><br><span class="line">                x &#x3D; (t + 1)*s</span><br><span class="line">                if s * t &lt; x:</span><br><span class="line">                    c &#x3D; 0</span><br><span class="line">                    for _ in range(s):</span><br><span class="line">                        data[s * t + c] &#x3D; data[s * t + c] ^ times</span><br><span class="line">                        c +&#x3D; 1</span><br><span class="line">                if times &#x3D;&#x3D; 0x59:</span><br><span class="line">                    while x &lt; size:</span><br><span class="line">                        data[x] &#x3D; data[x] ^ 89</span><br><span class="line">                        x +&#x3D; 1</span><br><span class="line">                    break</span><br><span class="line">            times +&#x3D; 1</span><br><span class="line"></span><br><span class="line">fbytes &#x3D; bytes(data)</span><br><span class="line">with open(&#39;E:\\07 XCTF\\mobile\\easy-dex\\6ee9ecdb39b5492aba053a73aeebb25b - 副本\\easydex.dex&#39;, &#39;wb&#39;) as f1:</span><br><span class="line">    f1.write(zlib.decompress(fbytes))</span><br></pre></td></tr></table></figure>
 
 <h3 id="分析加解密过程"><a href="#分析加解密过程" class="headerlink" title="分析加解密过程"></a>分析加解密过程</h3><p>拿到解密后的dex文件，dex2jar转化为jar，也可直接拖入jeb中查看java源码。</p>
 <p>MainActivity：</p>
-<p><img src="../images/easy-dex/image-20210118150016588.png" alt="image-20210118150016588"></p>
+<p><img src="/images/easy-dex/image-20210118150016588.png" alt="image-20210118150016588"></p>
 <p>监控器为a，查看a中onClick函数，发现调用了MainActivity中的a函数，将a函数返回值与i函数返回值进行比较，如果相等则继续。</p>
-<p><img src="../images/easy-dex/image-20210118151144279.png" alt="image-20210118151144279"> </p>
+<p><img src="/images/easy-dex/image-20210118151144279.png" alt="image-20210118151144279"> </p>
 <p>用pycharm打开文件夹（apktool解压缩后的文件夹），全局搜索0x7F060023，找到关键字two_fish，说明是双鱼加密算法。进一步全局搜索two_fish，在string.xml中找到，密钥应该就是I have a male fish and a female fish。</p>
-<p><img src="../images/easy-dex/image-20210118150535168.png" alt="image-20210118150535168"> </p>
-<p><img src="../images/easy-dex/image-20210118152144610.png" alt="image-20210118152144610"></p>
+<p><img src="/images/easy-dex/image-20210118150535168.png" alt="image-20210118150535168"> </p>
+<p><img src="/images/easy-dex/image-20210118152144610.png" alt="image-20210118152144610"></p>
 <p>i函数返回值就是m数组。jd-gui中查看m数组：</p>
 <p>m = { -120, 77, -14, -38, 17, 5, -42, 44, -32, 109, 85, 31, 24, -91, -112, -83, 64, -83, -128, 84, 5, -94, -98, -30, 18, 70, -26, 71, 5, -99, -62, -58, 117, 29, -44, 6, 112, -4, 81, 84, 9, 22, -51, 95, -34, 12, 47, 77 }</p>
 <p>有些字节为负值，百度一下原因，转化为正数，需要和0xff做与运算。</p>
-<p><img src="../images/easy-dex/image-20210118152727477.png" alt="image-20210118152727477"> </p>
+<p><img src="/images/easy-dex/image-20210118152727477.png" alt="image-20210118152727477"> </p>
 <p>python获取twofish加密结果：</p>
-<p><img src="../images/easy-dex/image-20210118160001922.png" alt="image-20210118160001922"></p>
+<p><img src="/images/easy-dex/image-20210118160001922.png" alt="image-20210118160001922"></p>
 <p>在线twofish解密，拿到flag：qwb{TH3y_Io&lt;e_EACh_OTh3r_FOrEUER}</p>
-<p><img src="../images/easy-dex/image-20210118160155966.png" alt="image-20210118160155966"></p>
+<p><img src="/images/easy-dex/image-20210118160155966.png" alt="image-20210118160155966"></p>
 
       
 
