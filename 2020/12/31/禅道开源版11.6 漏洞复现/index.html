@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>禅道开源版11.6 漏洞复现 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="环境准备禅道开源版11.61版本有RCE、SQL注入、任意文件读取等严重漏洞，11.61早期版本也有同样问题。现以开源版11.6进行漏洞复现。本次复现没有选择禅道一键安装，选择下载源码，用linux xampp开启Web服务。环境：xampp linux版本 （在kali中安装xampp）禅道11.6版本源码（https:&#x2F;&#x2F;www.zentao.net&#x2F;download&#x2F;80153.html）">
+  <meta name="description" content="环境准备禅道开源版11.61版本有RCE、SQL注入、任意文件读取等严重漏洞，11.61早期版本也有同样问题。现以开源版11.6进行漏洞复现。本次复现没有选择禅道一键安装，选择下载源码，用linux xampp开启Web服务。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="禅道开源版11.6 漏洞复现">
 <meta property="og:url" content="http://yoursite.com/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="环境准备禅道开源版11.61版本有RCE、SQL注入、任意文件读取等严重漏洞，11.61早期版本也有同样问题。现以开源版11.6进行漏洞复现。本次复现没有选择禅道一键安装，选择下载源码，用linux xampp开启Web服务。环境：xampp linux版本 （在kali中安装xampp）禅道11.6版本源码（https:&#x2F;&#x2F;www.zentao.net&#x2F;download&#x2F;80153.html）">
+<meta property="og:description" content="环境准备禅道开源版11.61版本有RCE、SQL注入、任意文件读取等严重漏洞，11.61早期版本也有同样问题。现以开源版11.6进行漏洞复现。本次复现没有选择禅道一键安装，选择下载源码，用linux xampp开启Web服务。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/images/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_151206-1609394828912.png">
 <meta property="og:image" content="http://yoursite.com/images/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_153310.png">
@@ -34,8 +34,9 @@
 <meta property="og:image" content="http://yoursite.com/images/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20200402144341596.png">
 <meta property="og:image" content="http://yoursite.com/images/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20200402150859666.png">
 <meta property="article:published_time" content="2020-12-31T03:34:11.055Z">
-<meta property="article:modified_time" content="2020-12-31T06:19:09.600Z">
+<meta property="article:modified_time" content="2021-02-02T08:15:54.700Z">
 <meta property="article:author" content="sqlmaping">
+<meta property="article:tag" content="漏洞复现">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_151206-1609394828912.png">
   
@@ -78,9 +79,12 @@
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+				<li><a href="/archives/index.html">归档</a></li>
 	        
 			</ul>
+		</nav>
+		<nav>
+			文章总数 5
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -100,7 +104,7 @@
 		<nav class="header-nav">
 			<div class="social">
 				
-					<a class="github" target="_blank" href="https://github.com/littlecjx" title="github"><i class="icon-github"></i></a>
+					<a class="github" target="_blank" href="https://github.com/sqlmaping" title="github"><i class="icon-github"></i></a>
 		        
 					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
 		        
@@ -141,7 +145,7 @@
 			<nav class="header-nav">
 				<div class="social">
 					
-						<a class="github" target="_blank" href="https://github.com/littlecjx" title="github"><i class="icon-github"></i></a>
+						<a class="github" target="_blank" href="https://github.com/sqlmaping" title="github"><i class="icon-github"></i></a>
 			        
 						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
 			        
@@ -158,7 +162,7 @@
 				
 					<li style="width: 50%"><a href="/">主页</a></li>
 		        
-					<li style="width: 50%"><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+					<li style="width: 50%"><a href="/archives/index.html">归档</a></li>
 		        
 				</ul>
 			</nav>
@@ -188,12 +192,39 @@
         <a href="/2020/12/31/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="archive-article-date">
   	<time datetime="2020-12-31T03:34:11.055Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-31</time>
 </a>
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+          <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">1.2k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">4分</span>
+      </span>
+    </span>
+</div>
+
+          
+        <!-- 添加完成 -->
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><p>禅道开源版11.61版本有RCE、SQL注入、任意文件读取等严重漏洞，11.61早期版本也有同样问题。现以开源版11.6进行漏洞复现。本次复现没有选择禅道一键安装，选择下载源码，用linux xampp开启Web服务。<br>环境：<br>xampp linux版本 （在kali中安装xampp）<br>禅道11.6版本源码（<a href="https://www.zentao.net/download/80153.html）" target="_blank" rel="noopener">https://www.zentao.net/download/80153.html）</a></p>
+        <h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><p>禅道开源版11.61版本有RCE、SQL注入、任意文件读取等严重漏洞，11.61早期版本也有同样问题。现以开源版11.6进行漏洞复现。本次复现没有选择禅道一键安装，选择下载源码，用linux xampp开启Web服务。</p>
+<a id="more"></a>
+
+<p>环境：<br>xampp linux版本 （在kali中安装xampp）<br>禅道11.6版本源码（<a href="https://www.zentao.net/download/80153.html）" target="_blank" rel="noopener">https://www.zentao.net/download/80153.html）</a></p>
 <h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><h4 id="分析路由"><a href="#分析路由" class="headerlink" title="分析路由"></a>分析路由</h4><p>先看一下禅道的路由，打开/config/config.php文件中，路由模式默认为PATH_INFO，PATH_INFO之间中的分割符为-。 </p>
 <p> <img src="/images/%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E7%89%8811.6%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/2020-04-01_151206-1609394828912.png" alt="2020-04-01_151206"></p>
 <h4 id="分析入口文件"><a href="#分析入口文件" class="headerlink" title="分析入口文件"></a>分析入口文件</h4><p>从入口文件www/index.php看禅道是如何传参的，定位到66-68行，调用了三个函数parseRequest()、checkPriv()、loadModule()。</p>
@@ -262,6 +293,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">漏洞复现</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -351,6 +393,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现"><span class="toc-number">2.</span> <span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分析路由"><span class="toc-number">2.1.</span> <span class="toc-text">分析路由</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分析入口文件"><span class="toc-number">2.2.</span> <span class="toc-text">分析入口文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#漏洞定位"><span class="toc-number">2.3.</span> <span class="toc-text">漏洞定位</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#漏洞利用"><span class="toc-number">2.4.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SQL注入"><span class="toc-number">2.4.1.</span> <span class="toc-text">SQL注入</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#任意文件读取"><span class="toc-number">2.4.2.</span> <span class="toc-text">任意文件读取</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#RCE漏洞"><span class="toc-number">2.4.3.</span> <span class="toc-text">RCE漏洞</span></a></li></ol></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>
@@ -456,6 +511,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">渗透测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
@@ -506,27 +573,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
         <ul class="search-ul">
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
+              <a href="https://kafroc.github.io/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>kafroc</a>
             </li>
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接2</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接3</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接4</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接5</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接6</a>
+              <a href="https://blog.runninghacker.cn/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>runninghacker</a>
             </li>
           
         </ul>

@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>kubelet漏洞利用 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一、简介kubernetes 是一个分布式的集群管理系统，在每个节点（node）上都要运行一个kubelet对容器进行生命周期的管理。kubelet开放的端口有：  4194：cAdvisor 监听，kublet 通过该端口可以获取到该节点的环境信息以及 node 上运行的容器状态等内容，访问 http:&#x2F;&#x2F;localhost:4194 可以看到 cAdvisor 的管理界面，通过 kubelet">
+  <meta name="description" content="一、简介kubernetes 是一个分布式的集群管理系统，在每个节点（node）上都要运行一个kubelet对容器进行生命周期的管理。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kubelet漏洞利用">
 <meta property="og:url" content="http://yoursite.com/2020/12/31/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="一、简介kubernetes 是一个分布式的集群管理系统，在每个节点（node）上都要运行一个kubelet对容器进行生命周期的管理。kubelet开放的端口有：  4194：cAdvisor 监听，kublet 通过该端口可以获取到该节点的环境信息以及 node 上运行的容器状态等内容，访问 http:&#x2F;&#x2F;localhost:4194 可以看到 cAdvisor 的管理界面，通过 kubelet">
+<meta property="og:description" content="一、简介kubernetes 是一个分布式的集群管理系统，在每个节点（node）上都要运行一个kubelet对容器进行生命周期的管理。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_205409-1609400201389.png">
 <meta property="og:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_210737-1609400268152.png">
@@ -21,8 +21,9 @@
 <meta property="og:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_212648-1609400293769.png">
 <meta property="og:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_213305-1609400308354.png">
 <meta property="article:published_time" content="2020-12-31T07:18:02.877Z">
-<meta property="article:modified_time" content="2020-12-31T07:38:30.526Z">
+<meta property="article:modified_time" content="2021-02-02T08:18:57.399Z">
 <meta property="article:author" content="sqlmaping">
+<meta property="article:tag" content="渗透测试">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_205409-1609400201389.png">
   
@@ -65,9 +66,12 @@
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+				<li><a href="/archives/index.html">归档</a></li>
 	        
 			</ul>
+		</nav>
+		<nav>
+			文章总数 5
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -87,7 +91,7 @@
 		<nav class="header-nav">
 			<div class="social">
 				
-					<a class="github" target="_blank" href="https://github.com/littlecjx" title="github"><i class="icon-github"></i></a>
+					<a class="github" target="_blank" href="https://github.com/sqlmaping" title="github"><i class="icon-github"></i></a>
 		        
 					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
 		        
@@ -128,7 +132,7 @@
 			<nav class="header-nav">
 				<div class="social">
 					
-						<a class="github" target="_blank" href="https://github.com/littlecjx" title="github"><i class="icon-github"></i></a>
+						<a class="github" target="_blank" href="https://github.com/sqlmaping" title="github"><i class="icon-github"></i></a>
 			        
 						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
 			        
@@ -145,7 +149,7 @@
 				
 					<li style="width: 50%"><a href="/">主页</a></li>
 		        
-					<li style="width: 50%"><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+					<li style="width: 50%"><a href="/archives/index.html">归档</a></li>
 		        
 				</ul>
 			</nav>
@@ -175,12 +179,39 @@
         <a href="/2020/12/31/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/" class="archive-article-date">
   	<time datetime="2020-12-31T07:18:02.877Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-31</time>
 </a>
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+          <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">675字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">2分</span>
+      </span>
+    </span>
+</div>
+
+          
+        <!-- 添加完成 -->
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>kubernetes 是一个分布式的集群管理系统，在每个节点（node）上都要运行一个kubelet对容器进行生命周期的管理。<br>kubelet开放的端口有： </p>
+        <h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>kubernetes 是一个分布式的集群管理系统，在每个节点（node）上都要运行一个kubelet对容器进行生命周期的管理。  </p>
+<a id="more"></a>
+
+<p>kubelet开放的端口有： </p>
 <p>4194：cAdvisor 监听，kublet 通过该端口可以获取到该节点的环境信息以及 node 上运行的容器状态等内容，访问 <a href="http://localhost:4194/" target="_blank" rel="noopener">http://localhost:4194</a> 可以看到 cAdvisor 的管理界面，通过 kubelet 的启动参数 –cadvisor-port 可以指定启动的端口。<br>10248：健康检查端口，健康检查通过访问该端口可以判断 kubelet 是否正常工作，通过 kubelet 的启动参数 –healthz-port 和 –healthz-bind-address 来指定监听的地址和端口。<br>10250：kubelet API，kubelet server 与 apiserver 通信的端口，定期请求 apiserver 获取自己所应当处理的任务，通过该端口可以访问获取node资源以及状态。<br>10255：readonly API，提供了pod和node的信息，接口以只读形式暴露出去，访问该端口不需要认证和鉴权。</p>
 <h1 id="二、漏洞利用"><a href="#二、漏洞利用" class="headerlink" title="二、漏洞利用"></a>二、漏洞利用</h1><p>kubernetes主要漏洞有端口开放泄露敏感信息，10255端口如果对外开放，攻击者利用公开api可以获取敏感信息。更严重的漏洞是开放10250端口，可能存在远程命令执行漏洞。通过以使用kubernetes的某应用为例说明漏洞的利用方法。<br>首先确定该应用使用了kubernetes，并开放了4个端口。  </p>
 <p><img src="/images/kubelet%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/2019-10-22_205409-1609400201389.png" alt="2019-10-22_205409"> </p>
@@ -218,6 +249,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">渗透测试</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -282,11 +324,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/01/18/easy-dex/index/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/02/02/easy-dex%E9%A2%98%E8%A7%A3/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          easy-dex/index
+          easy-dex题解
         
       </div>
     </a>
@@ -312,6 +354,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、简介"><span class="toc-number">1.</span> <span class="toc-text">一、简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、漏洞利用"><span class="toc-number">2.</span> <span class="toc-text">二、漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、10255端口泄露敏感信息"><span class="toc-number">2.1.</span> <span class="toc-text">1、10255端口泄露敏感信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、远程命令执行漏洞"><span class="toc-number">2.2.</span> <span class="toc-text">2、远程命令执行漏洞</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>
@@ -417,6 +472,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">渗透测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
@@ -467,27 +534,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
         <ul class="search-ul">
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
+              <a href="https://kafroc.github.io/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>kafroc</a>
             </li>
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接2</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接3</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接4</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接5</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接6</a>
+              <a href="https://blog.runninghacker.cn/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>runninghacker</a>
             </li>
           
         </ul>
