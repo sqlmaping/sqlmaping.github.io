@@ -162,7 +162,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/02/02/secure_portal%E9%A2%98%E8%A7%A3/">secure_portal题解</a>
+      <a class="article-title" href="/2021/02/02/secure_portal%E9%A2%98%E8%A7%A3/">500_Secure_portal题解</a>
     </h1>
   
 
@@ -178,7 +178,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">372字</span>
+        <span class="post-count">392字</span>
       </span>
     </span>
 
@@ -199,33 +199,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<hr>
-<h1 id="500-Secure-portal题解"><a href="#500-Secure-portal题解" class="headerlink" title="500_Secure_portal题解"></a>500_Secure_portal题解</h1><h2 id="0x00-工具"><a href="#0x00-工具" class="headerlink" title="0x00 工具"></a>0x00 工具</h2><p>pyinstxtractor.py（下载地址：<a href="https://sourceforge.net/projects/pyinstallerextractor/）" target="_blank" rel="noopener">https://sourceforge.net/projects/pyinstallerextractor/）</a></p>
-<p>uncompyle6（安装命令：pip install uncompyle6 ）</p>
-<p>010 Editor</p>
-<h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>在做ctf逆向题目时有时会遇到python写的.exe程序，如果能够将.exe反编译成python源码，就能更快解题。python打包exe文件有使用<strong>py2exe，PyInstaller，cx_Freeze，nuitka</strong>等方式，其中<strong>PyInstaller</strong>是最常用的方法。</p>
-<h2 id="0x02-初步分析"><a href="#0x02-初步分析" class="headerlink" title="0x02 初步分析"></a>0x02 初步分析</h2><p>这是一道exe逆向题，从exe文件的图标看出是PyInstaller所创建的windows可执行文件。PyInstaller创建exe文件的图标如下：</p>
-<p><img src="/images/secure_portal%E9%A2%98%E8%A7%A3/712992-20180504142328711-1437619231.png" alt="img"> </p>
-<p>此外还可以将exe拖入IDA中反编译，在strings中搜索关键字PyInstaller，如果找到，也可以判断是PyInstaller打包的exe。</p>
-<p><img src="/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201100631205.png" alt="image-20210201100631205">  </p>
-<h2 id="0x03-exe转为pyc"><a href="#0x03-exe转为pyc" class="headerlink" title="0x03 exe转为pyc"></a>0x03 exe转为pyc</h2><p>针对PyInstaller打包的文件，需要使用pyinstxtractor.py工具来提取文件内容。</p>
-<p><img src="/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201091240939.png" alt="image-20210201091240939"></p>
-<p>提取出来后，重点查看其中两个文件：</p>
-<p><img src="/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201091520931.png" alt="image-20210201091520931"> </p>
-<p><strong>注意</strong>：有时候会找不到pyc文件，这是因为生成的文件少了pyc文件头，所以我们要找到少了pyc文件头的文件。一般情况下，该文件在名称和exe名称相同的.manifest文件上面。</p>
-<h2 id="0x04-添加pyc文件头"><a href="#0x04-添加pyc文件头" class="headerlink" title="0x04 添加pyc文件头"></a>0x04 添加pyc文件头</h2><p>本题就是少了pyc文件头，所以需要取struct文件的前16位作为pyc头，放入qw（2）的开头。</p>
-<p>原本qw（2）：</p>
-<p><img src="/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201101559145.png" alt="image-20210201101559145"> </p>
-<p>添加pyc文件头：</p>
-<p><img src="/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201101857101.png" alt="image-20210201101857101"> </p>
-<p><img src="/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201102039562.png" alt="image-20210201102039562"> </p>
-<p>并把后缀修改为.pyc。</p>
-<h2 id="0x05-pyc反编译成py"><a href="#0x05-pyc反编译成py" class="headerlink" title="0x05 pyc反编译成py"></a>0x05 pyc反编译成py</h2><p>命令：uncompyle6 “qw (2).pyc” &gt; qw.py</p>
-<p><img src="/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201102414703.png" alt="image-20210201102414703"> </p>
-<h2 id="0x06-分析py并get-flag"><a href="#0x06-分析py并get-flag" class="headerlink" title="0x06 分析py并get flag"></a>0x06 分析py并get flag</h2><p>经过简单分析，直接打印出message即可，结合README.md，拿到flagshadowCTF{R0ck_th3_b@5e}</p>
-<p><img src="/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201102842221.png" alt="image-20210201102842221"></p>
-
+        <p>这是一道exe逆向题，记录下python写的exe程序的反编译过程。</p>
+        
+          <a class="article-more-a" href="/2021/02/02/secure_portal%E9%A2%98%E8%A7%A3/#more">more >></a>
+        
       
 
       
@@ -233,6 +210,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       

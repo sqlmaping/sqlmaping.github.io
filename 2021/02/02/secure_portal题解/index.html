@@ -6,14 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>secure_portal题解 | Hexo</title>
+  <title>500_Secure_portal题解 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="500_Secure_portal题解0x00 工具pyinstxtractor.py（下载地址：https:&#x2F;&#x2F;sourceforge.net&#x2F;projects&#x2F;pyinstallerextractor&#x2F;） uncompyle6（安装命令：pip install uncompyle6 ） 010 Editor 0x01 前言在做ctf逆向题目时有时会遇到python写的.exe程序，如果能够">
+  <meta name="description" content="这是一道exe逆向题，记录下python写的exe程序的反编译过程。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="secure_portal题解">
+<meta property="og:title" content="500_Secure_portal题解">
 <meta property="og:url" content="http://yoursite.com/2021/02/02/secure_portal%E9%A2%98%E8%A7%A3/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="500_Secure_portal题解0x00 工具pyinstxtractor.py（下载地址：https:&#x2F;&#x2F;sourceforge.net&#x2F;projects&#x2F;pyinstallerextractor&#x2F;） uncompyle6（安装命令：pip install uncompyle6 ） 010 Editor 0x01 前言在做ctf逆向题目时有时会遇到python写的.exe程序，如果能够">
+<meta property="og:description" content="这是一道exe逆向题，记录下python写的exe程序的反编译过程。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/images/secure_portal%E9%A2%98%E8%A7%A3/712992-20180504142328711-1437619231.png">
 <meta property="og:image" content="http://yoursite.com/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201100631205.png">
@@ -25,8 +25,9 @@
 <meta property="og:image" content="http://yoursite.com/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201102414703.png">
 <meta property="og:image" content="http://yoursite.com/images/secure_portal%E9%A2%98%E8%A7%A3/image-20210201102842221.png">
 <meta property="article:published_time" content="2021-02-02T09:25:21.029Z">
-<meta property="article:modified_time" content="2021-02-02T10:12:30.483Z">
+<meta property="article:modified_time" content="2021-02-02T10:19:00.425Z">
 <meta property="article:author" content="sqlmaping">
+<meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/secure_portal%E9%A2%98%E8%A7%A3/712992-20180504142328711-1437619231.png">
   
@@ -174,7 +175,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      secure_portal题解
+      500_Secure_portal题解
     </h1>
   
 
@@ -190,7 +191,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">372字</span>
+        <span class="post-count">392字</span>
       </span>
     </span>
 
@@ -211,9 +212,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<hr>
-<h1 id="500-Secure-portal题解"><a href="#500-Secure-portal题解" class="headerlink" title="500_Secure_portal题解"></a>500_Secure_portal题解</h1><h2 id="0x00-工具"><a href="#0x00-工具" class="headerlink" title="0x00 工具"></a>0x00 工具</h2><p>pyinstxtractor.py（下载地址：<a href="https://sourceforge.net/projects/pyinstallerextractor/）" target="_blank" rel="noopener">https://sourceforge.net/projects/pyinstallerextractor/）</a></p>
+        <p>这是一道exe逆向题，记录下python写的exe程序的反编译过程。</p>
+<a id="more"></a>
+
+<h2 id="0x00-工具"><a href="#0x00-工具" class="headerlink" title="0x00 工具"></a>0x00 工具</h2><p>pyinstxtractor.py（下载地址：<a href="https://sourceforge.net/projects/pyinstallerextractor/）" target="_blank" rel="noopener">https://sourceforge.net/projects/pyinstallerextractor/）</a></p>
 <p>uncompyle6（安装命令：pip install uncompyle6 ）</p>
 <p>010 Editor</p>
 <h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>在做ctf逆向题目时有时会遇到python写的.exe程序，如果能够将.exe反编译成python源码，就能更快解题。python打包exe文件有使用<strong>py2exe，PyInstaller，cx_Freeze，nuitka</strong>等方式，其中<strong>PyInstaller</strong>是最常用的方法。</p>
@@ -266,6 +268,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -359,7 +372,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#500-Secure-portal题解"><span class="toc-number">1.</span> <span class="toc-text">500_Secure_portal题解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-工具"><span class="toc-number">1.1.</span> <span class="toc-text">0x00 工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-前言"><span class="toc-number">1.2.</span> <span class="toc-text">0x01 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-初步分析"><span class="toc-number">1.3.</span> <span class="toc-text">0x02 初步分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-exe转为pyc"><span class="toc-number">1.4.</span> <span class="toc-text">0x03 exe转为pyc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-添加pyc文件头"><span class="toc-number">1.5.</span> <span class="toc-text">0x04 添加pyc文件头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-pyc反编译成py"><span class="toc-number">1.6.</span> <span class="toc-text">0x05 pyc反编译成py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-分析py并get-flag"><span class="toc-number">1.7.</span> <span class="toc-text">0x06 分析py并get flag</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-工具"><span class="toc-number">1.</span> <span class="toc-text">0x00 工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-前言"><span class="toc-number">2.</span> <span class="toc-text">0x01 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-初步分析"><span class="toc-number">3.</span> <span class="toc-text">0x02 初步分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-exe转为pyc"><span class="toc-number">4.</span> <span class="toc-text">0x03 exe转为pyc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-添加pyc文件头"><span class="toc-number">5.</span> <span class="toc-text">0x04 添加pyc文件头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-pyc反编译成py"><span class="toc-number">6.</span> <span class="toc-text">0x05 pyc反编译成py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-分析py并get-flag"><span class="toc-number">7.</span> <span class="toc-text">0x06 分析py并get flag</span></a></li></ol>
                     </div>
                 </span>
             </div>
